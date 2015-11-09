@@ -30,7 +30,24 @@ getMenu();
 		{
 			if(Selection == 1)
 			{
-				GetData.getAccountBalance();
+				//CREATE LIST ARRAY TO STORE THE BANKACCOUNT DATA
+				ArrayList<String> AccountRegister = new ArrayList<String>();
+				
+				//GET THE BANK ACCOUNT DATA FROM STORED TEXT FILE
+				AccountRegister = GetData.readfile();	
+
+				//PRINT OUT BANK ACCOUNT REGISTER
+				BLL_BankRegister.printAccountBalance(AccountRegister);
+			}
+			else if(Selection == 2)
+			{
+				//ITEMS TO DO:
+				/*
+				 * READ EXISTING TEXT FILE THAT HAS EXISTING BANK ACCOUNT INFO
+				 * ADD ITEM TO LIST ARRAY
+				 * OVERWRITE EXISTING TEXT FILE WITH UPDATED TEXT FILE
+				 * 
+				 */
 			}
 			
 		}

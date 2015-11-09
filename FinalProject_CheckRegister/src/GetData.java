@@ -1,90 +1,90 @@
 import java.io.*;
 import java.util.*;
+import java.util.ArrayList;
 public class GetData {
 
-	
-	public static void getAccountBalance()
+	/*
+	 * READ BANK ACCOUNT FILE.  TODO: PASS IN INPUT FROM CONSOLE
+	 */
+	public static ArrayList<String> readfile()
 	{
-
-		
-		//compile into an array to pass to write file class to right a file
-		String FileName = "c:\\finalproject-start.txt";
+		//OPEN A READER
+		BufferedReader buffer = null;
+		int LineNumber = 0;
+		String LineItem = null;
+		//CREATE BANK ACCOUNT REGSTER ARRY
+		ArrayList<String> arrBankAcount = new ArrayList<String>();
 		
 		try
 		{
-		FileReader FileReader = new FileReader(FileName);
-		BufferedReader reader = new BufferedReader(FileReader);
-
-		//print out results
-		displayAccountBalance(reader, FileName);
-		reader.close();
-		FileReader.close();
-		}
-		
-		//catch exceptions
-		catch(FileNotFoundException ex)
-		{
-			System.out.println(
-	                "Unable to open file '" + 
-	                		FileName + "'");
 			
-		}
-		
-		catch(IOException ex) {
-            System.out.println(
-                "Error reading file '" 
-                + FileName + "'");   
-
-        }
-		
-		
-	}
-	
-	public static void displayAccountBalance(BufferedReader reader, String FileName)
-	{
-		System.out.println("****** Account Balance ******");
-		
-		System.out.println();
-		
-		try
-		{
-		while (true)
-		{
-			String lineItem = reader.readLine();
-			if(lineItem == null)
+			String line = null;
+			
+			//READ FILE
+			buffer = new BufferedReader(new FileReader("c:\\finalproject-start2.txt"));
+			
+			while ((line = buffer.readLine()) != null)
 			{
-				break;
-			}
-			System.out.println(lineItem);
-		}
-		
-		}
-		
-	
-		//catch exceptions
-				catch(FileNotFoundException ex)
-				{
-					System.out.println(
-			                "Unable to open file '" + 
-			                		FileName + "'");
-				}
+				//CONVERT DATA TO AN ARRY AND CAST TO A STRING
+				LineItem = fileToArray(line).toString();
+				//ADD LINE ITEM TO LIST ARRAY
+				arrBankAcount.add(LineNumber,LineItem);
+				//INCREASE LINENUMBER
+				LineNumber++;
 				
-				catch(IOException ex) {
-		            System.out.println(
-		                "Error reading file '" 
-		                + FileName + "'");                  
-		            // Or we could just do this: 
-		            // ex.printStackTrace();
-		        }
-		
-		System.out.println();
-		System.out.println("*****************************");
-		
-		
-		//provide a menu to start over
-			BankRegister.getMenu();
+			}
+		}
+		//CATCH EXCEPTIONS
+		catch (IOException ex)
+		{
+			ex.printStackTrace();
+		}
+		finally
+		{
+			//DISPOSE BUFFER
+			try
+			{
+				if (buffer != null) buffer.close();
+			}
+			//CATCH EXCEPTIONS FROM CLOSING THE BUFFER
+			catch (IOException ex)
+			{
+				ex.printStackTrace();
+			}
+		}
+		//RETURN CREATED ARRY
+		return (arrBankAcount);
 	}
-
 	
+	/*
+	 * Convert CSV File to an Array and return the array.
+	 * Params: String
+	 */
+	public static ArrayList<String> fileToArray(String strcsv)
+	{
+		
+		//CREATE ARRAY LIST VARIABLE
+		ArrayList<String> arrList = new ArrayList<String>();
+		if (strcsv != null)
+		{
+			//SPLIT FILE ON DELIMETER
+			String[] splitData = strcsv.split("\\s*,\\s*");
+		
+			for (int i = 0; i < splitData.length; i++)
+			{
+				//CHECK TO ENSURE THERE ISN'T ANY INVALID DATA
+				if (!(splitData[i] == null) || !(splitData[i].length() == 0 ))
+				{
+					//ADD DATA TO THE ARRAY LIST
+					arrList.add(splitData[i].trim());
+					//return (splitData[i]);
+					//arrList.add();
+				}
+			}
+		}
 
-}
+		//RETURN ARRAY
+		return arrList;
+		
+	}
+	}
