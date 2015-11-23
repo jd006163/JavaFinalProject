@@ -1,14 +1,17 @@
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 public class BankRegister {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		System.out.println("****** Banking Menu ******");
 getMenu();
 	}
 	
 	
-	public static void getMenu()
+	public static void getMenu() throws IOException
 	{
 		Scanner console = new Scanner(System.in);
 		int Selection;
@@ -31,13 +34,25 @@ getMenu();
 			if(Selection == 1)
 			{
 				//CREATE LIST ARRAY TO STORE THE BANKACCOUNT DATA
-				ArrayList<String> AccountRegister = new ArrayList<String>();
+				ArrayList<ArrayList<String>> AccountRegister = new ArrayList<ArrayList<String>>();
 				
 				//GET THE BANK ACCOUNT DATA FROM STORED TEXT FILE
-				AccountRegister = GetData.readfile();	
+				AccountRegister=Transactions.readfile();
 
-				//PRINT OUT BANK ACCOUNT REGISTER
-				BLL_BankRegister.printAccountBalance(AccountRegister);
+				
+				    for(ArrayList<String> rowInFile:AccountRegister)
+				    {
+				    	//Format the string
+						String formattedString = rowInFile.toString()
+								
+							    .replace(",", "")  //remove the commas
+							    .replace("[", "")  //remove the right bracket
+							    .replace("]", "")  //remove the left bracket
+							    .trim(); 
+						
+				        System.out.println(formattedString);
+				    }
+
 			}
 			else if(Selection == 2)
 			{
@@ -48,6 +63,26 @@ getMenu();
 				 * OVERWRITE EXISTING TEXT FILE WITH UPDATED TEXT FILE
 				 * 
 				 */
+				//GET CURRENT DATE TO BE USED TO STORE THE TRANSACTION
+				DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+				Date date = new Date();
+				String CurrentDate = dateFormat.format(date);
+				
+				//Variable to store amount to be deposited
+				float DepositAmount; 
+				
+				//Type of Transaction
+				String TypeOfTransaction = "Deposit";
+				System.out.println("Please enter deposit amount: ");
+				
+				//GET DEPOSIT AMOUNT From Customer
+				DepositAmount = console.nextFloat();
+
+				//COMMIT TRANSACTION
+				Transactions.Action(CurrentDate, DepositAmount, TypeOfTransaction);
+				
+				//ADD DEPOSIT AMOUNT TO ARRAY
+				
 			}
 			
 		}
