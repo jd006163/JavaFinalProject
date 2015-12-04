@@ -1,49 +1,50 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-
+import java.io.*;
 public class WriteFile {
 
-	public static void CreateNewFile(ArrayList<ArrayList<String>> Account) throws IOException
+	public static void CreateNewFile(ArrayList<ArrayList<String>> Account, String AccountDataFile) throws IOException
 	{
+		FileWriter wr = new FileWriter(AccountDataFile);
 		
-		 String fileString = "c:\\test\\CDDatabase.txt";
-         File file01 = new File(fileString);
-
          try
          {
-              FileOutputStream fileOutputStream = new FileOutputStream(file01);
-              ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-              objectOutputStream.writeObject(Account); //now the whole ArrayList
-              //you can now just use an ObjectInputStream to deserialize the whole
-              //ArrayList later
-
-              //You also better flush() the ObjectOutputStream. Otherwise not all of the
-              //object will be serialized (the stream keeps a buffer and only writes
-              //occassionally for efficiency reasons
-              objectOutputStream.close();
+ //loop through the array list of arrays and write to the file
+        	 for (ArrayList<String> lineItem : Account)
+              {
+        		 //get size of the array to know when to insert the delimter
+        		 int lastitem = lineItem.size();
+        		 //item counter used to know when you hit the end of the array
+        		 int itemcounter = 0;
+        		 
+        		 //get the values of the given array list
+        		for (String value: lineItem)
+        		{
+        			//increase the counter
+        		 itemcounter++;
+        		 //write the value to the text file
+        		 wr.write(value) ;
+        		 //insert delimiter if you are not on the last item in the array
+        		 if(itemcounter != lastitem)
+        		 {
+        		 wr.write(",");
+        		 }
+        		 
+        		}
+        		//create line seperator
+        		 wr.write(System.lineSeparator());
+  
+              }
+            
          }
-         catch(FileNotFoundException e)
+         catch(Exception e)
          {
               e.printStackTrace();
          }
+         finally {
+        	//close the connection
+        	 wr.close();
+         }
 	}
-	//create method to compile a list of line items and either add/substract from your overall balance.
-	//the data needs to be saved to an array and sorty by the date column
-	
-	/*
-	 String[] temp;
-String line;
-String delims = ",";
-int rowCounter = 0;
-while ((line = input.readLine())!= null) {
-    temp = line.split(delims);  // Moved inside the loop.
-    for(int i = 0; i<6; i++){
-    X[rowCounter][i] = Double.parseDouble(temp[i]);
-} 
-	 
-	 */
+
 }
