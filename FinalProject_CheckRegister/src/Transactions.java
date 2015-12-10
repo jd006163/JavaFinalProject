@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.io.File;
 import java.util.Scanner;
 
 public class Transactions {
@@ -12,15 +13,19 @@ public class Transactions {
 	public static ArrayList<ArrayList<String>> readfile(String AccountDataFile)
 
 	{
-		//CREATE BANK ACCOUNT REGSTER ARRY
-		ArrayList<ArrayList<String>> arrBankAcount=new ArrayList<ArrayList<String>>();
+		
 		try
 		{
+			//CREATE BANK ACCOUNT REGSTER ARRY
+			ArrayList<ArrayList<String>> arrBankAcount=new ArrayList<ArrayList<String>>();
+			
 			//READ FILE
+
 			Scanner scanner = new Scanner(new FileReader(AccountDataFile));
 			//SET DELIMITER
 			scanner.useDelimiter(",");
 			
+
 			//LOOP THROUGH FILE AND ADD TO ARRAY
 			 while(scanner.hasNext())
 	         {
@@ -28,23 +33,23 @@ public class Transactions {
 	            String []dataInRowArray=dataInRow.split(",");
 	            ArrayList<String> rowDataFromFile=new ArrayList<String>(Arrays.asList(dataInRowArray));
 	            arrBankAcount.add(rowDataFromFile);
+	            
 	         }
 	         scanner.close();
-	     }
-	     
-			
-			
-		//CATCH EXCEPTIONS
-		catch (IOException ex)
+	         
+	 		//RETURN CREATED ARRY
+	 		return arrBankAcount;
+		}
+		catch(Exception ex)
 		{
 			ex.printStackTrace();
 		}
-		//RETURN CREATED ARRY
-		return arrBankAcount;
+		return null;
+
 	}
 	
 	//PERFORM A WITHDRAW OR DEPOSIT ACTION
-	public static void Action(String CurrentDate, float Amount, String TypeOfTransaction, String AccountDataFile) throws IOException
+	public static void Action(String CurrentDate, float Amount, String TypeOfTransaction, String AccountDataFile)
 	{
 		
 		//CREATE LIST ARRAY TO STORE THE BANKACCOUNT DATA
@@ -62,8 +67,10 @@ public class Transactions {
 				
 					//INCREMENT BALANCE TO INCLUDE DEPOSITED AMOUNT
 					float NewBalance = 	AccountBalance + Amount; 
+					
 					//CREATE DEPOSIT ARRAY LIST TO STORE THE DEPOSIT AMOUNT
 					ArrayList<String> Deposit = new ArrayList<String>();
+					
 					//ADD THE APPROPRIATE FIELDS TO THE LEDGER
 					Deposit.add(CurrentDate);
 					Deposit.add("D");
@@ -72,24 +79,28 @@ public class Transactions {
 
 					//ADD DEPOSIT ARRAY TO ACCOUNTTRANSACTION ARRAY LIST
 					AccountTransaction.add(Deposit);
-					//CREATE NEW FILE
-					WriteFile.CreateNewFile(AccountTransaction, AccountDataFile);
 					
+					//CREATE NEW FILE
+					
+					WriteFile.CreateNewFile(AccountTransaction, AccountDataFile);
+						
 					//FORMAT ACCOUNT BALANCE TO LOOK LIKE CURRENCY
 					NumberFormat formatter = NumberFormat.getCurrencyInstance();
 					String frmtBalance = formatter.format(NewBalance);
 					
 					//DISPLAY ACCOUNT BALANCE
 					System.out.println("Your new account balance is: " + frmtBalance);
+					
 			}
 		
-		catch (Exception e) {
-		
-				e.printStackTrace();
-			}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 
 		else if (TypeOfTransaction == "Withdraw")
-		{
+		try {
+			
 			//DECREASE BALANCE TO INCLUDE WITHDRAWN AMOUNT.  A CHECK IS PERFORMED BEFORE GETTING HERE, SO WE SHOULD NEVER HIT NEGATIVE
 			float NewBalance = 	AccountBalance - Amount; 
 			ArrayList<String> Withdraw = new ArrayList<String>();
@@ -99,10 +110,50 @@ public class Transactions {
 			Withdraw.add(Float.toString(Amount));
 			Withdraw.add(Float.toString(NewBalance));
 			AccountTransaction.add(Withdraw);
+			
+			//WRITE FILE
 			WriteFile.CreateNewFile(AccountTransaction, AccountDataFile);
 			
+			//FORMAT ACCOUNT BALANCE TO LOOK LIKE CURRENCY
+			NumberFormat formatter = NumberFormat.getCurrencyInstance();
+			String frmtBalance = formatter.format(NewBalance);
+			
+			//DISPLAY ACCOUNT BALANCE
+			System.out.println("Your new account balance is: " + frmtBalance);
 		}
 		
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
+		
+	}
+	
+	public static void Action(String CurrentDate, String TypeOfTransaction, Float Amount, String AccountNo)
+	{
+		//CREATE LIST ARRAY TO STORE THE BANKACCOUNT DATA
+		ArrayList<ArrayList<String>> AccountTransaction = new ArrayList<ArrayList<String>>();
+				
+		//CREATE A NEW ACCOUNT
+		if(TypeOfTransaction == "Create")
+	try
+		{
+			ArrayList<String> arrNewAccount = new ArrayList<String>();
+			arrNewAccount.add(CurrentDate);
+			arrNewAccount.add("D");
+			arrNewAccount.add(Float.toString(Amount));
+			arrNewAccount.add(Float.toString(Amount));
+			AccountTransaction.add(arrNewAccount);
+			
+			//WRITE FILE
+			WriteFile.CreateNewFile(AccountTransaction, GetFileName(AccountNo));
+		}
+		
+	catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
 	}
 	
 	//GET BALANCE
@@ -126,6 +177,15 @@ public class Transactions {
 
 	return balance;
 
+	
+}
+
+	//GENERATE FILENAMNE
+	public static String GetFileName(String AccountNo)
+{
+	String FileName = AccountNo+".txt";
+	
+	return FileName;
 	
 }
 }
