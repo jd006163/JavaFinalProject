@@ -1,3 +1,4 @@
+package BankAccountDemo1;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -183,9 +184,24 @@ public class Transactions {
 	//GENERATE FILENAMNE
 	public static String GetFileName(String AccountNo)
 {
-	String FileName = AccountNo+".txt";
+	//directory where customer file is stored in is their account number.
+	String FolderName = AccountNo;
+	String FileName = "Clients\\"+FolderName+"\\"+ AccountNo+".txt";
 	
 	return FileName;
 	
 }
+	//GENERATE FILENAMNE BASED ON FOLDER NAME
+	public static String GetFileName(File Folder)
+	{
+		
+		 //BUILD UP FILE NAME BASED ON DIRECTORY NAME.  FILENAME IS SAME AS FOLDER NAME
+        String FileName = Folder.toString();
+        //REMOVE PARENT DIRECTORY STRUCTURE TO CREATE FILENAME
+        FileName = FileName.replace("Clients\\", "");
+        //APPEND FILE EXTENSION
+        FileName = Folder + "\\" + FileName + ".txt";
+		
+		return FileName;
+	}
 }

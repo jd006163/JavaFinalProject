@@ -14,7 +14,7 @@ public class BankDemo {
             System.out.println("1. New account");
             System.out.println("2. Transaction");
             System.out.println("3. View Account Information");
-            System.out.println("q. Exit");
+            System.out.println("q. Exit - Go to Main Menu");
             System.out.println("choice:");
             choice = sc.next();
             switch (choice) {
@@ -54,12 +54,18 @@ public class BankDemo {
 
             case "q":
                 System.out.println("Thank you!");
+                BankAccountDemo1.BankRegister.main(args);
                 break;
 
             default:
                 System.out.println("Wrong choice!!");
             }
+            
         } while (choice != "q");
-        sc.close();
+        {
+        	sc.close();
+        }
+        
+        
     }
 }
